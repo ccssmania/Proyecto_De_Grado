@@ -1,0 +1,19 @@
+doctype html
+html(lang="es")
+	head
+		title app
+		meta(charset="utf-8")
+		link(href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel ="stylesheet")
+		link(href = "/public/app.css" rel="stylesheet")
+	body
+		nav(class="large-padding black white-text")
+			ul
+				li 
+					a(href="/app") inicio
+				li 
+					a(href="/app/imagenes") Mis imagenes
+				li 
+					a(href="/app/imagenes/new") subir imagen
+				li 
+					a(href="/") salir
+		block contenido
