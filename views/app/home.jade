@@ -1,0 +1,11 @@
+extends ../layout.jade
+block contenido
+  
+	for imagen in imagenes
+		div(class="img-container")
+			h1 #{imagen.title}
+			img(src= "/public/imagenes/#{imagen._id}_scale.#{imagen.extension}", class="main-img")
+			if(typeof imagen.creator != "undefined")
+				p por #{imagen.creator.email}
+   
+	script(src="/public/js/client.js")

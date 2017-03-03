@@ -5,6 +5,7 @@ html(lang="es")
 		meta(charset="utf-8")
 		link(href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel ="stylesheet")
 		link(href = "/public/app.css" rel="stylesheet")
+		script(src="/socket.io/socket.io.js")
 	body
 		nav(class="large-padding black white-text")
 			ul
@@ -15,5 +16,5 @@ html(lang="es")
 				li 
 					a(href="/app/imagenes/new") subir imagen
 				li 
-					a(href="/") salir
+					a(href="/app/salir") salir
 		block contenido

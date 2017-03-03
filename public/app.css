@@ -57,10 +57,20 @@ nav li a:hover{
 	max-width: 100%;
 	margin: 0 auto;
 }
+.img-container2{
+	
+	max-width: 90%;
+	margin: 0 auto;
+}
+.img-container2 h1{
+	padding: 15px;
+	border-bottom: 1px solid #222;
+}
 .img-container h1{
 	padding: 15px;
 	border-bottom: 1px solid #222;
 }
+
 .img-container p{
 	text-align: right;
 	font-size: 1.2em;
@@ -69,7 +79,9 @@ nav li a:hover{
 .tr:nth-of-type(odd){
 	background-color: #eee;
 }
-
+#image{
+	display: inline-block;
+}
 form.link{
 	display: inline-block;
 }

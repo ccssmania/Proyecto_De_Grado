@@ -10,13 +10,26 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.16.1",
+    "canvas": "^1.6.4",
+    "chunk": "0.0.2",
+    "color-thief": "^2.2.2",
+    "connect-redis": "^3.2.0",
     "cookie-session": "^2.0.0-beta.1",
+    "crc-32": "^1.0.1",
     "express": "^4.14.1",
     "express-formidable": "^1.0.0",
     "express-session": "^1.15.1",
+    "get-image-data": "^3.0.1",
+    "imagebuffer": "^3.0.1",
     "jade": "^1.11.0",
+    "jimp": "^0.2.27",
+    "lwip": "0.0.9",
     "method-override": "^2.3.7",
     "mongoose": "^4.8.4",
-    "mv": "^2.1.1"
-	}
+    "mv": "^2.1.1",
+    "pngjs": "^3.0.1",
+    "redis": "^2.6.5",
+    "sobel": "0.0.7",
+    "socket.io": "^1.7.3"
+  }
 }

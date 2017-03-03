@@ -1,29 +1,40 @@
 var express = require("express");
-var bodyParser = require("body-parser");
+// var bodyParser = require("body-parser");
 var session = require("express-session");
-var app = express();
 var User = require("./models/users").User;
-// var router_app = require("./routers_app");
-// var session_middleware = require("./middlewares/session");
-// var methodOverride = require("method-override");
-// var formidable = require("express-formidable");
+var router_app = require("./routers_app");
+var session_middleware = require("./middlewares/session");
+var formidable = require("express-formidable");
+var RedisStore = require("connect-redis")(session);
+var http = require("http");
+var realtime = require("./realtime");
+
+
+var methodOverride = require("method-override");
+var app = express();
+
+
+var server = http.Server(app);
+var sessionMiddleware = session({
+  store: new RedisStore({}),
+  secret: "super secret world",
+  resave: true,
+  saveUninitialized: true
+});
+realtime(server, sessionMiddleware);
+
 
 app.use("/public", express.static('public'));
 
-app.use(bodyParser.json());  // para json
-app.use(bodyParser.urlencoded({extended: true}));
+// app.use(bodyParser.json());  // para json
+// app.use(bodyParser.urlencoded({extended: true}));
+
+app.use(methodOverride("_method"));
 
 
-app.use(session({
-  secret: "1234dsfasdf324",
-  resave: false,
-  saveUninitialized: false
+app.use(sessionMiddleware);
 
-
-}));
-
-// app.use(formidable({keepExtensions: true}));
-// app.use(methodOverride("_method"));
+app.use(formidable({keepExtensions: true}));
 app.set("view engine", "jade");
 
 app.get("/", function(req, res) {
@@ -47,10 +58,10 @@ app.get("/login", function(req, res) {
 });
 app.post("/users", function(req, res) {
   var user = new User({
-    email: req.body.email,
-    password: req.body.password,
-    password_confirmation: req.body.password_confirmation,
-    username: req.body.username
+    email: req.fields.email,
+    password: req.fields.password,
+    password_confirmation: req.fields.password_confirmation,
+    username: req.fields.username
 
   });
   user.save().then(
@@ -63,12 +74,15 @@ app.post("/users", function(req, res) {
 });
 app.post("/sessions", function(req, res) {
   User.findOne(
-      {email: req.body.email, password: req.body.password},
+      {email: req.fields.email, password: req.fields.password},
       function(err, user) {
         req.session.user_id = user._id;
-        res.send("hola mundo")
+        res.redirect("app/");
       });
 });
 
+app.use("/app", session_middleware);
 
-app.listen(8080);
+
+app.use("/app", router_app);
+server.listen(8080);

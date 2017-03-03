@@ -1,0 +1,8 @@
+extends ../../layout.jade
+block contenido
+	div(class="img-container2")
+		h1 #{imagen.title}
+		img(src= "/public/imagenes/#{imagen._id}_scale.#{imagen.extension}", class="main-img")
+		img(src= "/public/imagenes/#{imagen._id}_sobel.png", class="main-img")
+		if(typeof imagen.creator != "undefined")
+				p por #{imagen.creator.email}
