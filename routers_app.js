@@ -4,8 +4,8 @@ var mv = require("mv");
 var Imagen = require("./models/imagenes");
 var router = express.Router();
 var image_finder = require("./middlewares/find_image");
-var jimp = require("jimp");
-var lwip = require('lwip');
+//var jimp = require("jimp");
+var lwip = require('jimp');
 var redis = require("redis");  // 2292222222
 var sobel = require("sobel");
 var Canvas = require("canvas");
@@ -107,14 +107,14 @@ router.route("/imagenes")
                 if (err) {
                   console.log(err);
                 } else {
-                  lwip.open(
+                  lwip.read(
                       "public/imagenes/" + imagen._id + "." + ext,
                       function(err, image) {
                         console.log(image);
                         // check err...
                         // define a batch of manipulations and save to disk as
                         // JPEG:
-                        image.batch().scale(0.1).writeFile(
+                        image.scale(0.1).write(
                             "public/imagenes/" + imagen._id + "_scale." + ext,
                             function(err) {
                               var imgs = new ImageSobel();

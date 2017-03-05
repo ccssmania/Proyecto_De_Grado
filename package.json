@@ -10,7 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.16.1",
-    "canvas": "^1.6.4",
+    "canvas": "git://github.com/elspoono/node-canvas-heroku.git",
     "chunk": "0.0.2",
     "color-thief": "^2.2.2",
     "connect-redis": "^3.2.0",
@@ -27,9 +27,14 @@
     "method-override": "^2.3.7",
     "mongoose": "^4.8.4",
     "mv": "^2.1.1",
+    "node-image-resize": "0.0.2",
     "pngjs": "^3.0.1",
     "redis": "^2.6.5",
     "sobel": "0.0.7",
     "socket.io": "^1.7.3"
+  },
+  "devDependencies":{
+
+    "canvas": "^1.6.4"
   }
 }

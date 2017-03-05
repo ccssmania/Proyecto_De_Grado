@@ -53,6 +53,7 @@ app.get("/login", function(req, res) {
   User.find(function(err, doc) {
     console.log(doc);
     res.render("login");
+    
   });
 
 });
@@ -70,6 +71,7 @@ app.post("/users", function(req, res) {
         console.log("algo ocurrion al guardar");
         res.send("no se guardo");
       });
+  res.render("login");
 
 });
 app.post("/sessions", function(req, res) {
