@@ -13,7 +13,7 @@ var mv = require("mv");
 var image_finder = require("./middlewares/find_image");
 var lwip = require('jimp');
 var client = redis.createClient();
-module.exports = function(req,res, ext, imagen) {
+module.exports = function(req,res, ext, imagen, from) {
 
 
 imagen.save(function(err) {
@@ -87,106 +87,85 @@ imagen.save(function(err) {
                               }
                               // 2
                               var rgb = [0, 0, 0];
-                              function floodFill(foto) {
-                                var centery = parseInt(foto.height / 2);
-                                var centerx = parseInt(foto.width / 2);
+                              var count = 0;
+                              function floodFill() {
+                                var centery = parseInt(newfile.height / 2);
+                                var centerx = parseInt(newfile.width / 2);
                                 var stack = [];
                                 var point = new Array(centerx, centery);
                                 stack.push(point);
 
                                 console.log(point[0]);
                                 console.log(point[1]);
-                                var count = 0;
 
                                 while (stack.length != 0) {
                                   var xy = stack.pop();
-                                  var idx = (newfile.width * xy[1] + xy[0])
-                                  << 2;
+                                  var idx = (newfile.width * xy[1] + xy[0]) << 2;
 
-                                  if (xy[0] > 0 && xy[0] < foto.width - 1 &&
-                                    xy[1] > 0 && xy[1] < foto.height) {
-                                    var left =
-                                  (newfile.width * xy[1] + xy[0] - 1)
-                                  << 2;
-                                  var rigth =
-                                  (newfile.width * xy[1] + xy[0] + 1)
-                                  << 2;
-                                  var up =
-                                  (newfile.width * (xy[1] - 1) + xy[0])
-                                  << 2;
-                                  var down =
-                                  (newfile.width * (xy[1] + 1) + xy[0])
-                                  << 2;
+                                  var limits = 150;
+
+                                  if (xy[0] > 0 && xy[0] < newfile.width - 1 && xy[1] > 0 &&
+                                      xy[1] < newfile.height) {
+                                    var left = (newfile.width * xy[1] + xy[0] - 1) << 2;
+                                    var rigth = (newfile.width * xy[1] + xy[0] + 1) << 2;
+                                    var up = (newfile.width * (xy[1] - 1) + xy[0]) << 2;
+                                    var down = (newfile.width * (xy[1] + 1) + xy[0]) << 2;
 
 
-                                  if (foto.data[left] != 255 &&
-                                    foto.data[left + 1] != 255 &&
-                                    foto.data[left + 2] != 255) {
-                                    var p = new Array(xy[0] - 1, xy[1]);
-                                  stack.push(p);
+                                    if (newfile.data[left] < limits && newfile.data[left + 1] < limits &&
+                                        newfile.data[left + 2] < limits) {
+                                      var p = new Array(xy[0] - 1, xy[1]);
+                                      stack.push(p);
 
-                                      // console.log(stack.length);
+                                      newfile.data[left] = 255;
+                                      newfile.data[left + 1] = 0;
+                                      newfile.data[left + 2] = 0;
                                     }
 
-                                    if (foto.data[rigth] != 255 &&
-                                      foto.data[rigth + 1] != 255 &&
-                                      foto.data[rigth + 2] != 255) {
+                                    if (newfile.data[rigth] < limits && newfile.data[rigth + 1] < limits &&
+                                        newfile.data[rigth + 2] < limits) {
                                       var p = new Array(xy[0] + 1, xy[1]);
-                                    stack.push(p);
-                                    newfile.data[rigth] = 255;
-                                    newfile.data[rigth + 1] = 255;
-                                    newfile.data[rigth + 2] = 255;
+                                      stack.push(p);
 
-                                    foto.data[rigth] = 255;
-                                    foto.data[rigth + 1] = 255;
-                                    foto.data[rigth + 2] = 255;
-                                  }
 
-                                  if (foto.data[up] != 255 &&
-                                    foto.data[up + 1] != 255 &&
-                                    foto.data[up + 2] != 255) {
-                                    var p = new Array(xy[0], xy[1] - 1);
-                                  stack.push(p);
-                                  newfile.data[up] = 255;
-                                  newfile.data[up + 1] = 255;
-                                  newfile.data[up + 2] = 255;
+                                      newfile.data[rigth] = 255;
+                                      newfile.data[rigth + 1] = 0;
+                                      newfile.data[rigth + 2] = 0;
+                                    }
 
-                                  foto.data[up] = 255;
-                                  foto.data[up + 1] = 255;
-                                  foto.data[up + 2] = 255;
-                                }
+                                    if (newfile.data[up] < limits && newfile.data[up + 1] < limits &&
+                                        newfile.data[up + 2] < limits) {
+                                      var p = new Array(xy[0], xy[1] - 1);
+                                      stack.push(p);
 
-                                if (foto.data[down] != 255 &&
-                                  foto.data[down + 1] != 255 &&
-                                  foto.data[down + 2] != 255) {
-                                  var p = new Array(xy[0], xy[1] + 1);
-                                stack.push(p);
+                                      newfile.data[up] = 255;
+                                      newfile.data[up + 1] = 0;
+                                      newfile.data[up + 2] = 0;
+                                    }
 
-                                newfile.data[down] = 255;
-                                newfile.data[down + 1] = 255;
-                                newfile.data[down + 2] = 255;
+                                    if (newfile.data[down] < limits && newfile.data[down + 1] < limits &&
+                                        newfile.data[down + 2] < limits) {
+                                      var p = new Array(xy[0], xy[1] + 1);
+                                      stack.push(p);
 
-                                foto.data[down] = 255;
-                                foto.data[down + 1] = 255;
-                                foto.data[down + 2] = 255;
-                              }
-                                    // 22222console.log(stack.length);
+
+                                      newfile.data[down] = 255;
+                                      newfile.data[down + 1] = 0;
+                                      newfile.data[down + 2] = 0;
+                                    }
                                   }
                                   count++;
                                   rgb[0] += imageData.data[idx];
                                   rgb[1] += imageData.data[idx + 1];
                                   rgb[2] += imageData.data[idx + 2];
 
-                                  // console.log("rgb ", rgb);
-
-
-                                  // console.log(foto.data[idx + 2]);
                                 }
                                 rgb[0] = rgb[0] / (count);
                                 rgb[1] = rgb[1] / (count);
                                 rgb[2] = rgb[2] / (count);
                                 console.log("rgb ", rgb);
                               }
+                              
                               floodFill(newfile);
                               newfile
                               .pack()
@@ -198,8 +177,13 @@ imagen.save(function(err) {
                               .on("finish", function(err) {
                                 if (!err) {
                                   console.log("logrado :D");
-                                  res.redirect(
-                                          "/app/imagenes/" + imagen._id);  //
+                                  if(from == "web")
+                                    res.redirect(
+                                            "/app/imagenes/" + imagen._id); 
+                                  else res.send(200, {
+                                    fileUrl: "/app/imagenes/" + imagen._id,
+                                    rgb: rgb
+                                  });
                                 }
                               });
                             });

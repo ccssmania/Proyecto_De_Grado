@@ -6,7 +6,7 @@ var router = express.Router();
 var image_finder = require("./middlewares/find_image");
 //var jimp = require("jimp");
 var lwip = require('jimp');
-var redis = require("redis");  // 2292222222
+var redis = require("redis");  
 var sobel = require("sobel");
 var Canvas = require("canvas");
 var ImageSobel = Canvas.Image;
@@ -42,9 +42,7 @@ router.all("/imagenes/:id*", image_finder);
 
 
 
-router.get("/imagenes/:id/edit", function(req, res) {
-  res.render("app/imagenes/edit");
-});
+
 
 router.route('/salir').get(function(req, res) {
   delete req.session.user_id;
@@ -59,19 +57,6 @@ router.route("/imagenes/:id")
   res.render("app/imagenes/show");
 
 })
-.put(function(req, res) {
-  res.locals.imagen.title = req.fields.title;
-  res.locals.imagen.save(function(err) {
-    if (!err) {
-      res.render("app/imagenes/show");
-    } else {
-      res.render("app/imagenes/" + req.params.id + "edit");
-    }
-
-
-  })
-
-})
 .delete(function(req, res) {
   Imagen.findOneAndRemove({_id: req.params.id}, function(err) {
     if (!err) {
@@ -84,19 +69,10 @@ router.route("/imagenes/:id")
 
 
 
-router.post("/imagenes/movil", upload.single("movil"),function(req,res){
-  console.log("hola");
-  console.log(req.file.path);
-  console.log(req.file.mimetype);
-  var ext = req.file.mimetype.split("/");
-  return mv(req.file.path,"./public/imagenes/"+req.file.filename+"."+ext[1], function(err){if(err)console.log(err);});
-});
-
-
 
 router.route("/imagenes")
 .get(function(req, res) {
-Imagen.find({/*creator: res.locals.user._id*/}, function(err, imagenes) {
+Imagen.find({creator: res.locals.user._id}, function(err, imagenes) {
   if (err) {
     res.redirect("/app");
     return;
