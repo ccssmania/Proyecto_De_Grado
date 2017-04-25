@@ -180,10 +180,8 @@ imagen.save(function(err) {
                                   if(from == "web")
                                     res.redirect(
                                             "/app/imagenes/" + imagen._id); 
-                                  else res.send(200, {
-                                    fileUrl: "/app/imagenes/" + imagen._id,
-                                    rgb: rgb
-                                  });
+                                  else res.send(200, /*"public/imagenes/" + imagen._id + "_sobel.png"*/rgb
+                                  );
                                 }
                               });
                             });
